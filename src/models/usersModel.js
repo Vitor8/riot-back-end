@@ -39,9 +39,17 @@ const getUserByIdModel = async({ id }) => {
   return user;
 }
 
+const deleleteUserModel = async({ id }) => {
+  const usersCollection = await mongoConnection.getConnection()
+    .then((db) => db.collection('users'));
+
+  await usersCollection.deleteOne({ _id: ObjectId(id) });
+}
+
 module.exports = {
   createUserModel,
   updateUserModel,
   getAllUsersModel,
-  getUserByIdModel
+  getUserByIdModel,
+  deleleteUserModel
 };

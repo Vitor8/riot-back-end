@@ -2,7 +2,8 @@ const {
   createUserModel,
   updateUserModel,
   getAllUsersModel,
-  getUserByIdModel
+  getUserByIdModel,
+  deleleteUserModel
 } = require('../models/usersModel');
 
 const createUserController = async (req, res) => {
@@ -41,9 +42,18 @@ const getUserByIdController = async(req, res) => {
   return res.status(201).json({ user });
 }
 
+const deleteUserController = async(req, res) => {
+  const { id } = req.params;
+
+  await deleleteUserModel({ id });
+
+  return res.status(201).json({ 'message': 'delete ok' });
+}
+
 module.exports = {
   createUserController,
   updateUserController,
   getAllUsersController,
-  getUserByIdController
+  getUserByIdController,
+  deleteUserController
 };
