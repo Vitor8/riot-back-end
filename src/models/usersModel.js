@@ -1,5 +1,6 @@
 const mongoConnection = require('./connection');
 const { ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 
 const getUserByGitHubName = async({ gitHubUser }) => {
   const usersCollection = await mongoConnection.getConnection()
@@ -28,14 +29,11 @@ const createUserModel = async ({ user }) => {
 };
 
 const updateUserModel = async({ user }) => {
-  const usersCollection = await mongoConnection.getConnection()
+  await mongoConnection.getConnection()
     .then((db) => {
       return db.collection('users')
-        .findOneAndUpdate({ 'github-user': user['github-user'] }, { $set: user }, { returnOriginal: false })
-        .then((result) => result.value);
+        .findOneAndUpdate({ _id: ObjectId(user['id']) }, { $set: user }, { returnOriginal: false })
     });
-
-  return usersCollection;
 }
 
 const getAllUsersModel = async() => {
@@ -63,10 +61,26 @@ const deleleteUserModel = async({ id }) => {
   await usersCollection.deleteOne({ _id: ObjectId(id) });
 }
 
+const loginUserModel = async({ email, password }) => {
+  const secret = process.env.SECRET;
+
+  const payload = {
+    email,
+    password,
+  };
+
+  const token = jwt.sign(payload, secret, {
+    expiresIn: '8h',
+  });
+
+  return token;
+}
+
 module.exports = {
   createUserModel,
   updateUserModel,
   getAllUsersModel,
   getUserByIdModel,
-  deleleteUserModel
+  deleleteUserModel,
+  loginUserModel
 };

@@ -17,8 +17,11 @@ const {
   updateUserController,
   getAllUsersController,
   getUserByIdController,
-  deleteUserController
+  deleteUserController,
+  loginUserController
 } = require('./src/controllers/usersController');
+
+app.post('/login', loginUserController);
 
 app.post('/user', createUserController);
 
