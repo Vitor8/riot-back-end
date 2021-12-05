@@ -21,17 +21,21 @@ const {
   loginUserController
 } = require('./src/controllers/usersController');
 
+const {
+  isTokenValid
+} = require('./src/validations/isDataValid');
+
 app.post('/login', loginUserController);
 
-app.post('/user', createUserController);
+app.post('/user', isTokenValid, createUserController);
 
-app.put('/user', updateUserController);
+app.put('/user', isTokenValid, updateUserController);
 
-app.get('/users', getAllUsersController);
+app.get('/users', isTokenValid, getAllUsersController);
 
-app.get('/user/:id', getUserByIdController);
+app.get('/user/:id', isTokenValid, getUserByIdController);
 
-app.delete('/user/:id', deleteUserController);
+app.delete('/user/:id', isTokenValid, deleteUserController);
 
 app.listen(port, () => {
   console.log(`Aplicação ouvindo na porta ${port}`);
