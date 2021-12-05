@@ -1,9 +1,26 @@
 const mongoConnection = require('./connection');
 const { ObjectId } = require('mongodb');
 
+const getUserByGitHubName = async({ gitHubUser }) => {
+  const usersCollection = await mongoConnection.getConnection()
+    .then((db) => db.collection('users'));
+
+  const user = await usersCollection.findOne({ "gitHubUser": gitHubUser });
+
+  if (user) return true;
+
+  return false;
+}
+
 const createUserModel = async ({ user }) => {
   const usersCollection = await mongoConnection.getConnection()
     .then((db) => db.collection('users'));
+
+  const gitHubUser = user["gitHubUser"];
+
+  const userAlreadyRegistered = await getUserByGitHubName({ gitHubUser });
+
+  if (userAlreadyRegistered) return false;
 
   await usersCollection.insertOne(user);
 

@@ -9,10 +9,16 @@ const {
 const createUserController = async (req, res) => {
   const { user } = req.body;
 
-  await createUserModel({ user });
+  const newUser = await createUserModel({ user });
+
+  if (!newUser) {
+    return res.status(409).json({
+      message: 'User already registered',
+    });
+  }
 
   return res.status(201).json({
-    message: 'ok'
+    message: 'User created successfully',
   });
 };
 
