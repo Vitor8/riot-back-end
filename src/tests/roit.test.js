@@ -552,3 +552,80 @@ describe('5 - Testa endpoint get "/user/id"', () => {
       });
   });
 });
+
+describe('6 - Testa endpoint delete "/user/id"', () => {
+  let connection;
+  let db;
+
+  beforeAll(async () => {
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('riot');
+  });
+
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
+  });
+
+  afterAll(async () => {
+    await db.collection('users').deleteMany({});
+    await connection.close();
+  });
+
+  test('Será validado que é possível deletar usuário', async () => {
+    let result;
+    let resultUser = {};
+    
+    await frisby
+      .post(`${url}/login/`, {
+        email: 'vitor@email.com',
+        password: 'admin',
+      })
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                'Content-Type': 'application/json',
+              },
+            },
+          })
+          .post(`${url}/user`, {
+            user: {
+              name: "Vitor Hugo"
+            }
+          })
+          .expect('status', 201)
+          .then((responseLogin) => {
+            const { json } = responseLogin;
+            resultUser['id'] = json.id;
+            expect(json.message).toBe('User created successfully');
+          });
+      });
+
+    const idUser = resultUser['id'];
+
+    await frisby
+      .setup({
+        request: {
+          headers: {
+            Authorization: result.token,
+            'Content-Type': 'application/json',
+          },
+        },
+      })
+      .delete(`${url}/user/${idUser}`)
+      .expect('status', 201)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        expect(result.message).toBe('delete ok');
+      });
+  });
+});
