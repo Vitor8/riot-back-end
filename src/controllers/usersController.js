@@ -18,7 +18,7 @@ const createUserController = async (req, res) => {
     });
   }
 
-  const { id } = newUser.id;
+  const { id } = newUser;
 
   return res.status(201).json({
     id,
