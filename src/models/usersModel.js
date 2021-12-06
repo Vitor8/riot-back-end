@@ -23,9 +23,11 @@ const createUserModel = async ({ user }) => {
 
   if (userAlreadyRegistered) return false;
 
-  await usersCollection.insertOne(user);
+  const { insertedId: id } = await usersCollection.insertOne(user);
 
-  return true;
+  return {
+    id,
+  };
 };
 
 const updateUserModel = async({ user }) => {

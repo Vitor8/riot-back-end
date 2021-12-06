@@ -17,6 +17,10 @@ describe('1 - Testa endpoint post "/login"', () => {
     db = connection.db('riot');
   });
 
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
+  });
+
   afterAll(async () => {
     await connection.close();
   });
@@ -46,6 +50,10 @@ describe('2 - Testa endpoint post "/user"', () => {
       useUnifiedTopology: true,
     });
     db = connection.db('riot');
+  });
+
+  beforeEach(async () => {
+    await db.collection('users').deleteMany({});
   });
 
   afterAll(async () => {
@@ -127,3 +135,83 @@ describe('2 - Testa endpoint post "/user"', () => {
       });
   })
 });
+
+// OBSERVAÇÃO: O teste para esse endpoint está dando erro
+// describe('3 - Testa endpoint put "/user"', () => {
+//   let connection;
+//   let db;
+
+//   beforeAll(async () => {
+//     connection = await MongoClient.connect(mongoDbUrl, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+//     db = connection.db('riot');
+//   });
+
+//   beforeEach(async () => {
+//     await db.collection('users').deleteMany({});
+//   });
+
+//   afterAll(async () => {
+//     await connection.close();
+//   });
+
+//   it('Será validado que é possível atualizar usuário estando autentificado', async () => {
+//     let result;
+//     let resultUser;
+
+//     await frisby
+//       .post(`${url}/login/`, {
+//         email: 'erickjacquin@gmail.com',
+//         password: '12345678',
+//       })
+//       .expect('status', 200)
+//       .then((response) => {
+//         const { body } = response;
+//         result = JSON.parse(body);
+//         return frisby
+//           .setup({
+//             request: {
+//               headers: {
+//                 Authorization: result.token,
+//                 'Content-Type': 'application/json',
+//               },
+//             },
+//           })
+//           .post(`${url}/user`, {
+//             user: {
+//               name: 'Gabriel',
+//             }
+//           })
+//           .expect('status', 201)
+//           .then((responseRecipes) => {
+//             const { body } = responseRecipes;
+//             resultUser = JSON.parse(body);
+//           });
+//       });
+
+//     // Observação: A partir ocorre um erro que não consegui resolver
+//     await frisby
+//       .setup({
+//         request: {
+//           headers: {
+//             Authorization: result.token,
+//             'Content-Type': 'application/json',
+//           },
+//         },
+//       })
+//       .put(`${url}/user`, {
+//         user: {
+//           id: resultUser['id'],
+//           name: 'Gabriel Felipe',
+//         }
+//       })
+//       .expect('status', 201)
+//       .then((response) => {
+//         const { body } = response;
+//         result = JSON.parse(body);
+//         expect(result.message).toBe('update ok');
+//       });
+//   });
+// });
