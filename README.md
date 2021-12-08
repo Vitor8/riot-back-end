@@ -34,7 +34,7 @@ Este é o repositório para o Back End. O repositório do Front End se encontra 
 
 Organizei meu código no seguinte formato. Cada pasta possui os arquivos de acordo com a funcionalidade referente ao nome da pasta. 
 
-
+![estrutura-back-end](https://user-images.githubusercontent.com/24492328/145211958-5e1ba751-4c31-4b9e-98f6-8d899469c8c5.png)
 
 A autenticação é feita via `JWT`.
 
