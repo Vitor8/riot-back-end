@@ -181,7 +181,7 @@ Para executar os testes localmente, digite no terminal o comando `npm test`.
      }
   }
   ```
-- O retorno da requisição deve segue o seguinte formato, com status `201`:
+- O retorno da requisição segue o seguinte formato, com status `201`:
 
 ```json
 {
